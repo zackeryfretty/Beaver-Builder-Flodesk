@@ -20,7 +20,7 @@ define( 'BB_FLODESK_URL', plugins_url( '/', __FILE__ ) );
 // Check for Beaver Builder
 function zf_bbflo_check_for_beaver_builder() {
   if ( class_exists( 'FLBuilder' ) ) {
-        // If Beaver Builder is installed, do the thing.
+        // If Beaver Builder is installed, load the class into the sub module.
         function zf_bbflo_add_to_sub_module( $services ) {
             $services['flodesk'] = array(
                 'type'  => 'autoresponder',
