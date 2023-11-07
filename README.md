@@ -8,4 +8,4 @@ To use:
 - Install & activate the plugin usual way.
 - Select "Flodesk" when using the Subscribe Form module and enjoy!
 
-NOTE: Please use this plugin at your own risk, I can't be held responsible if it does anything crazy on you or breaks. The Flodesk API seems pretty new, so things may change. 
+NOTE: Please use this plugin at your own risk, I can't be held responsible if it does anything crazy on you or breaks. The Flodesk API seems pretty new, so things may change. Zero Warranty.
