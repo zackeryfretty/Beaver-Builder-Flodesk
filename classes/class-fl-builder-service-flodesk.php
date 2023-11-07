@@ -52,7 +52,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 			$api_response = wp_remote_get( self::$api_base . '/segments' , array(
 				'headers' => array(
 					'Content-Type'  => 'application/json',
-					'Authorization' => 'Basic ' . base64_encode($fields['api_key']) . '',
+					'Authorization' => 'Basic ' . $fields['api_key'] . '',
 				),
 				'user-agent' => 'BB-Flodesk (zackeryfretty.com)'
 			) );
@@ -109,18 +109,34 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 	 * }
 	 */
 	public function render_fields( $account, $settings ) {
-		$account_data = $this->get_account_data( $account );
-		$api          = $this->get_api( $account_data['api_key'] );
-		$forms        = $api->get_resources( 'forms' );
 		$response     = array(
 			'error' => false,
 			'html'  => '',
 		);
 
-		if ( ! $forms ) {
+		// get saved account api key
+		$account_data = $this->get_account_data( $account );
+
+		// grab all the segments
+		$api_response = wp_remote_get( self::$api_base . '/segments' , array(
+			'headers' => array(
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Basic ' . $account_data['api_key'] . '',
+			),
+			'user-agent' => 'BB-Flodesk (zackeryfretty.com)'
+		) );
+
+		// get just the body
+		$api_responce_body = json_decode(wp_remote_retrieve_body( $api_response ));
+
+		// now just the segments
+		$segments = $api_responce_body->data;
+
+		// render list
+		if ( ! $segments ) {
 			$response['error'] = __( 'Error: Please check your API key.', 'fl-builder' );
 		} else {
-			$response['html'] = $this->render_list_field( $forms, $settings );
+			$response['html'] = $this->render_list_field( $segments, $settings );
 		}
 
 		return $response;
@@ -130,21 +146,23 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 	 * Render markup for the list field.
 	 *
 	 * @since 1.5.4
-	 * @param array $lists List data from the API.
+	 * @param array $segments Segment data from the API.
 	 * @param object $settings Saved module settings.
 	 * @return string The markup for the list field.
 	 * @access private
 	 */
-	private function render_list_field( $forms, $settings ) {
+	private function render_list_field( $segments, $settings ) {
 		ob_start();
 
 		$options = array(
 			'' => __( 'Choose...', 'fl-builder' ),
 		);
 
-		if ( isset( $forms['forms'] ) ) {
-			foreach ( $forms['forms'] as $form ) {
-				$options[ $form['id'] ] = esc_attr( $form['name'] );
+		// if segments exist in the account, proceed.
+		if ( isset( $segments ) ) {
+			// loop through each and grab the id & name to build the <select>.
+			foreach ( $segments as $segment ) {
+				$options[ $segment->id ] = esc_attr( $segment->name );
 			}
 		}
 
@@ -152,7 +170,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 			'row_class' => 'fl-builder-service-field-row',
 			'class'     => 'fl-builder-service-list-select',
 			'type'      => 'select',
-			'label'     => _x( 'List', 'An email list from a third party provider.', 'fl-builder' ),
+			'label'     => _x( 'Segment', 'An email list from a third party provider.', 'fl-builder' ),
 			'options'   => $options,
 			'preview'   => array(
 				'type' => 'none',
