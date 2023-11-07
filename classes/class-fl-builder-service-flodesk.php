@@ -231,6 +231,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 			$api_responce_code = wp_remote_retrieve_response_code( $api_response );
 			$api_responce_body = json_decode(wp_remote_retrieve_body( $api_response ));
 			
+			// add user to selected segment
 			if(( ! is_wp_error($api_response)) && (200 === $api_responce_code )) {
 				$api_response_2 = wp_remote_post( self::$api_base . '/subscribers' . '/' . $data['email'] . '/segments' , array(
 					'headers' => array(
