@@ -67,7 +67,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 				);
 			} else {
 			// otherwise tell the user it's a bad key.
-				$response['error'] = 'Error: Please check your API key.';
+				$response['error'] = __( 'Error: Please check your API key.', 'fl-builder' );
 			}
 		}
 
@@ -88,7 +88,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 			'class'     => 'fl-builder-service-connect-input',
 			'type'      => 'text',
 			'label'     => __( 'API Key', 'fl-builder' ),
-			'help'      => __( 'Your API key can be found in your Flodesk account.', 'fl-builder' ),
+			'help'      => __( 'Your API key can be found in your Flodesk account under My Account > Integrations > API Keys.', 'fl-builder' ),
 			'preview'   => array(
 				'type' => 'none',
 			),
@@ -244,7 +244,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 					)
 				);
 			} else {
-				$response['error'] = 'Error: '. $api_responce_body->message .'';
+				$response['error'] = __('Error: '. $api_responce_body->message .'', 'fl-builder' );
 			}
 
 		}
