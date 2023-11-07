@@ -192,34 +192,61 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 	 * }
 	 */
 	public function subscribe( $settings, $email, $name = '' ) {
-		$account_data = $this->get_account_data( $settings->service_account );
 		$response     = array(
 			'error' => false,
 		);
+		// get account api key
+		$account_data = $this->get_account_data( $settings->service_account );
+
+		// build field data
+		$data = array(
+			'email' => $email,
+		);
+
+		if ( ! empty( $name ) ) {
+			$data['fname'] = $name;
+		}
 
 		if ( ! $account_data ) {
-			$response['error'] = __( 'There was an error subscribing to Flodesk. The account is no longer connected.', 'fl-builder' );
+			// if that errors out, let user know.
+			$response['error'] = __( 'Error: You were not subscribed.', 'fl-builder' );
+		
 		} else {
 
-			$api  = $this->get_api( $account_data['api_key'] );
-			$data = array(
-				'email' => $email,
+			// add/update the user in flodesk
+			$api_response = wp_remote_post( self::$api_base . '/subscribers' , array(
+				'headers' => array(
+					'Content-Type'  => 'application/json',
+					'Authorization' => 'Basic ' . $account_data['api_key'] . '',
+				),
+				'user-agent' => 'BB-Flodesk (zackeryfretty.com)',
+				'body' => json_encode([
+					'first_name' => $data['fname'] ?? '',
+					'email' => $data['email']
+				])
+				)
 			);
 
-			if ( ! empty( $name ) ) {
-				$data['fname'] = $name;
-			}
-
-			$result = $api->form_subscribe( $settings->list_id, $data );
-
-			if ( isset( $result->error ) ) {
-				$message           = isset( $result->message ) ? $result->message : '';
-				$response['error'] = sprintf(
-					/* translators: %s: error */
-					__( 'There was an error subscribing to Flodesk. Error: %s', 'fl-builder' ),
-					$message
+			// get response code & body
+			$api_responce_code = wp_remote_retrieve_response_code( $api_response );
+			$api_responce_body = json_decode(wp_remote_retrieve_body( $api_response ));
+			
+			if(( ! is_wp_error($api_response)) && (200 === $api_responce_code )) {
+				$api_response_2 = wp_remote_post( self::$api_base . '/subscribers' . '/' . $data['email'] . '/segments' , array(
+					'headers' => array(
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Basic ' . $account_data['api_key'] . '',
+					),
+					'user-agent' => 'BB-Flodesk (zackeryfretty.com)',
+					'body' => json_encode([
+						'segment_ids' => [$settings->list_id],
+					])
+					)
 				);
+			} else {
+				$response['error'] = 'Error: '. $api_responce_body->message .'';
 			}
+
 		}
 
 		return $response;
