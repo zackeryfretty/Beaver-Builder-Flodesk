@@ -7,41 +7,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Helper class for the Flodesk API.
  *
- * @since 1.5.4
  */
 final class FLBuilderServiceFlodesk extends FLBuilderService {
 
 	/**
 	 * The ID for this service.
 	 *
-	 * @since 1.5.4
 	 * @var string $id
 	 */
 	public $id = 'flodesk';
 
 	/**
-	 * @since 1.5.4
-	 * @var object $api_instance
-	 * @access private
-	 */
-	private $api_instance = null;
-
-	/**
-	 * Get an instance of the API.
+	 * The API URI for this service.
 	 *
-	 * @since 1.5.4
-	 * @param string $api_key A valid API key.
-	 * @return object The API instance.
+	 * @param string $api
 	 */
-	public function get_api( $api_key ) {
-		if ( $this->api_instance ) {
-			return $this->api_instance;
-		}
-
-		$this->api_instance = new ConvertKit( $api_key );
-
-		return $this->api_instance;
-	}
+	private static $api_base = 'https://api.flodesk.com/v1';
 
 	/**
 	 * Test the API connection.
@@ -63,17 +44,30 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 
 		// Make sure we have an API key.
 		if ( ! isset( $fields['api_key'] ) || empty( $fields['api_key'] ) ) {
+			// If not, remind user.
 			$response['error'] = __( 'Error: You must provide an API key.', 'fl-builder' );
+		
 		} else {
+			// hit the segment endpoint to test validity.
+			$api_response = wp_remote_get( self::$api_base . '/segments' , array(
+				'headers' => array(
+					'Content-Type'  => 'application/json',
+					'Authorization' => 'Basic ' . base64_encode($fields['api_key']) . '',
+				),
+				'user-agent' => 'BB-Flodesk (zackeryfretty.com)'
+			) );
 
-			$api = $this->get_api( $fields['api_key'] );
-
-			if ( $api->is_authenticated() ) {
+			// get the response code.
+			$api_responce_code = wp_remote_retrieve_response_code( $api_response );
+			
+			// if there's no wp error and flodesk gives a 200, save working key.
+			if(( ! is_wp_error($api_response)) && (200 === $api_responce_code )) {
 				$response['data'] = array(
 					'api_key' => $fields['api_key'],
 				);
 			} else {
-				$response['error'] = sprintf( __( 'Error: Please check your API key. %s', 'fl-builder' ), $api::$response['error_message'] );
+			// otherwise tell the user it's a bad key.
+				$response['error'] = 'Error: Please check your API key.';
 			}
 		}
 
