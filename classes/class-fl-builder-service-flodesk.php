@@ -52,7 +52,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 			$api_response = wp_remote_get( self::$api_base . '/segments' , array(
 				'headers' => array(
 					'Content-Type'  => 'application/json',
-					'Authorization' => 'Basic ' . $fields['api_key'] . '',
+					'Authorization' => 'Basic ' . base64_encode( $fields['api_key'] . ':'),
 				),
 				'user-agent' => 'BB-Flodesk (zackeryfretty.com)'
 			) );
@@ -121,7 +121,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 		$api_response = wp_remote_get( self::$api_base . '/segments' , array(
 			'headers' => array(
 				'Content-Type'  => 'application/json',
-				'Authorization' => 'Basic ' . $account_data['api_key'] . '',
+				'Authorization' => 'Basic ' . base64_encode( $account_data['api_key'] . ':'),
 			),
 			'user-agent' => 'BB-Flodesk (zackeryfretty.com)'
 		) );
@@ -217,7 +217,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 			$api_response = wp_remote_post( self::$api_base . '/subscribers' , array(
 				'headers' => array(
 					'Content-Type'  => 'application/json',
-					'Authorization' => 'Basic ' . $account_data['api_key'] . '',
+					'Authorization' => 'Basic ' . base64_encode( $account_data['api_key'] . ':'),
 				),
 				'user-agent' => 'BB-Flodesk (zackeryfretty.com)',
 				'body' => json_encode([
@@ -236,7 +236,7 @@ final class FLBuilderServiceFlodesk extends FLBuilderService {
 				$api_response_2 = wp_remote_post( self::$api_base . '/subscribers' . '/' . $data['email'] . '/segments' , array(
 					'headers' => array(
 						'Content-Type'  => 'application/json',
-						'Authorization' => 'Basic ' . $account_data['api_key'] . '',
+						'Authorization' => 'Basic ' . base64_encode( $account_data['api_key'] . ':'),
 					),
 					'user-agent' => 'BB-Flodesk (zackeryfretty.com)',
 					'body' => json_encode([
