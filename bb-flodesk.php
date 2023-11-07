@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Beaver Builder Flodesk
  * Plugin URI: https://zackeryfretty.com
- * Description: Adds Flodesk as an integration option when using the Subscribe Module in Beaver Builder.
+ * Description: Adds Flodesk as an integration option when using the Subscribe Form module in Beaver Builder.
  * Version: 1.0
  * Author: Zackery Fretty
  * Author URI: https://zackeryfretty.com
