@@ -5,7 +5,7 @@ Beaver Builder Flodesk is a simple no settings plugin that allows you to use Flo
 To use:
 
 - Download the [ZIP file](https://github.com/zackeryfretty/Beaver-Builder-Flodesk/archive/refs/heads/main.zip).
-- Install & activate the plugin usual way.
+- Install & activate the plugin the usual way (Plugins > Add New).
 - Select "Flodesk" when using the Subscribe Form module and enjoy!
 
-NOTE: Please use this plugin at your own risk, I can't be held responsible if it does anything crazy on you or breaks. The Flodesk API seems pretty new, so things may change. Zero Warranty.
+NOTE: Use this plugin **at your own risk**. It comes with no warranty and I can’t be held liable for any data loss or other unexpected issues that might arise with using it — absolutely no exceptions. If you install this on your site I assume you understand this. 
