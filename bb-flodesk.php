@@ -26,7 +26,7 @@ function zf_bbflo_check_for_beaver_builder() {
                 'type'  => 'autoresponder',
                 'name'  => 'Flodesk',
                 'class' => 'FLBuilderServiceFlodesk',
-                'file'  => BB_FLODESK_DIR .'/classes/class-fl-builder-service-flodesk.php',
+                'file'  => BB_FLODESK_DIR .'classes/class-fl-builder-service-flodesk.php',
             );
             // Restore alphabetical listing
             ksort($services);
