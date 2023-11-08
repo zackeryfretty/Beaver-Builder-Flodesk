@@ -28,6 +28,8 @@ function zf_bbflo_check_for_beaver_builder() {
                 'class' => 'FLBuilderServiceFlodesk',
                 'file'  => BB_FLODESK_DIR .'/classes/class-fl-builder-service-flodesk.php',
             );
+            // Restore alphabetical listing
+            ksort($services);
         return $services;
       }
       add_filter( 'fl_builder_subscribe_form_services', 'zf_bbflo_add_to_sub_module' );
